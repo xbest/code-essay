@@ -1,5 +1,7 @@
 package com.github.xbest.serialprint;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -14,18 +16,15 @@ public class SerialPrintTest {
         int printTime = 10;
 
         Lock lock = new ReentrantLock();
-
         Condition aCondition = lock.newCondition();
         Condition bCondition = lock.newCondition();
         Condition cCondition = lock.newCondition();
 
-        Thread aThread = new Thread(new SerialPrintABC(aCondition, bCondition, "A", lock, printTime));
-        Thread bThread = new Thread(new SerialPrintABC(bCondition, cCondition, "B", lock, printTime));
-        Thread cThread = new Thread(new SerialPrintABC(cCondition, aCondition, "C", lock, printTime));
-
-        bThread.start();
-        aThread.start();
-        cThread.start();
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+        executorService.submit(new SerialPrintABC(aCondition, bCondition, "A", lock, printTime));
+        executorService.submit(new SerialPrintABC(bCondition, cCondition, "B", lock, printTime));
+        executorService.submit(new SerialPrintABC(cCondition, aCondition, "C", lock, printTime));
+        executorService.shutdown();
 
         TimeUnit.SECONDS.sleep(1);
 
