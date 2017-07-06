@@ -13,19 +13,18 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SerialPrintTest {
     public static void main(String[] args) throws InterruptedException {
 
-        int printTime = 10;
-
         Lock lock = new ReentrantLock();
         Condition aCondition = lock.newCondition();
         Condition bCondition = lock.newCondition();
         Condition cCondition = lock.newCondition();
 
         ExecutorService executorService = Executors.newFixedThreadPool(3);
-        executorService.submit(new SerialPrintABC(aCondition, bCondition, "A", lock, printTime));
-        executorService.submit(new SerialPrintABC(bCondition, cCondition, "B", lock, printTime));
-        executorService.submit(new SerialPrintABC(cCondition, aCondition, "C", lock, printTime));
+        executorService.submit(new SerialPrintABC(aCondition, bCondition, "A", lock));
+        executorService.submit(new SerialPrintABC(bCondition, cCondition, "B", lock));
+        executorService.submit(new SerialPrintABC(cCondition, aCondition, "C", lock));
         executorService.shutdown();
 
+        // 休眠一秒，防止还没有await就signal了，就丢了。
         TimeUnit.SECONDS.sleep(1);
 
         lock.lock();

@@ -12,14 +12,13 @@ public class SerialPrintABC implements Runnable {
     private Condition next;
     private String letter;
     private Lock lock;
-    private int time;
+    private final int time = 10;
 
-    public SerialPrintABC(Condition prev, Condition next, String letter, Lock lock, int time) {
+    public SerialPrintABC(Condition prev, Condition next, String letter, Lock lock) {
         this.prev = prev;
         this.next = next;
         this.letter = letter;
         this.lock = lock;
-        this.time = time;
     }
 
     public void run() {
