@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by link on 2017/7/5.
  */
-public class SerialPrintTest {
+public class SerialPrintConditionTest {
     public static void main(String[] args) throws InterruptedException {
 
         Lock lock = new ReentrantLock();
@@ -19,9 +19,9 @@ public class SerialPrintTest {
         Condition cCondition = lock.newCondition();
 
         ExecutorService executorService = Executors.newFixedThreadPool(3);
-        executorService.submit(new SerialPrintABC(aCondition, bCondition, "A", lock));
-        executorService.submit(new SerialPrintABC(bCondition, cCondition, "B", lock));
-        executorService.submit(new SerialPrintABC(cCondition, aCondition, "C", lock));
+        executorService.submit(new SerialPrintCondition(aCondition, bCondition, "A", lock));
+        executorService.submit(new SerialPrintCondition(bCondition, cCondition, "B", lock));
+        executorService.submit(new SerialPrintCondition(cCondition, aCondition, "C", lock));
         executorService.shutdown();
 
         // 休眠一秒，防止还没有await就signal了，就丢了。

@@ -7,14 +7,14 @@ import java.util.concurrent.locks.Lock;
  * 顺序打印 ABC N次
  * Created by link on 2017/7/5.
  */
-public class SerialPrintABC implements Runnable {
+public class SerialPrintCondition implements Runnable {
     private Condition prev;
     private Condition next;
     private String letter;
     private Lock lock;
     private final int time = 10;
 
-    public SerialPrintABC(Condition prev, Condition next, String letter, Lock lock) {
+    public SerialPrintCondition(Condition prev, Condition next, String letter, Lock lock) {
         this.prev = prev;
         this.next = next;
         this.letter = letter;
